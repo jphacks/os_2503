@@ -104,7 +104,7 @@ export default function RootLayout({
             <SignedOut>
               <SignInButton />
               <SignUpButton>
-                <button className="text-ceramic-white h-10 cursor-pointer rounded-full bg-[#6c47ff] px-4 text-sm font-medium sm:h-12 sm:px-5 sm:text-base">
+                <button className="text-ceramic-white h-10 cursor-pointer rounded-full bg-amber-400 px-4 text-sm font-medium sm:h-12 sm:px-5 sm:text-base">
                   Sign Up
                 </button>
               </SignUpButton>
@@ -114,7 +114,7 @@ export default function RootLayout({
             </SignedIn>
           </header>
           {children}
-          <footer className="fixed bottom-0 flex h-20 w-full items-center justify-between overflow-visible border-t-2 border-amber-900 bg-amber-300 px-8">
+          <footer className="fixed bottom-0 flex h-20 w-full items-center justify-between overflow-visible bg-amber-400 px-8 shadow-inner shadow-black">
             <Button className="bg-transparent">
               <Link href="/">
                 <FaHome size={48} color={"#000000"} />
