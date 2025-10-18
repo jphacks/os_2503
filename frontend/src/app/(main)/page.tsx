@@ -32,7 +32,7 @@ export default async function Home() {
       </div>
       <EggViewer
         crackUrls={homePageData.egg.cracks.map((c) => c.transparent_url)}
-        className="h-80 w-80 lg:h-96 lg:w-96"
+        className="h-80 w-80 overflow-clip rounded-2xl lg:h-96 lg:w-96"
       />
 
       <Progress
