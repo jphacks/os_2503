@@ -19,3 +19,6 @@ visdom
 # CPU版 PyTorch
 torch
 torchvision
+
+supabase
+dotenv
