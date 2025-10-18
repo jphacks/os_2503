@@ -1,13 +1,17 @@
+import EggViewer from "@/components/egg-viewer";
 import { Progress } from "@/components/ui/progress";
+import { fetchMockHomePageData } from "@/lib/api";
 import Image from "next/image";
 import Link from "next/link";
 import { VscTriangleRight } from "react-icons/vsc";
 
-export default function Home() {
+export default async function Home() {
   const crack = 10;
   const crack_need = 100;
   const aquatan_history: string[] = ["あ", "い", "う", "え"];
   const user_info: [string, string] = ["Aquatan", "Crack Master"];
+
+  const homePageData = await fetchMockHomePageData();
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-y-4 px-8 pb-30 font-sans">
@@ -26,7 +30,11 @@ export default function Home() {
           <p>{user_info[1]}</p>
         </div>
       </div>
-      <div className="h-60 w-2/3 rounded-2xl border-2 border-black lg:w-1/3"></div>
+      <EggViewer
+        crackUrls={homePageData.egg.cracks.map((c) => c.transparent_url)}
+        className="h-80 w-80 lg:h-96 lg:w-96"
+      />
+
       <Progress
         value={(crack / crack_need) * 100}
         className="h-4 w-[90%] bg-gray-200 lg:w-[45%] [&>div]:bg-amber-400"
