@@ -1,0 +1,24 @@
+# 数値計算・科学計算
+numpy
+scipy
+scikit-image
+scikit-learn
+matplotlib
+
+# 画像関連
+Pillow
+
+# Web / HTML用
+dominate
+fastapi
+uvicorn
+
+# 可視化ツール
+visdom
+
+# CPU版 PyTorch
+torch
+torchvision
+
+# OpenCV
+opencv-python
