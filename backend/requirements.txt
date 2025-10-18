@@ -19,6 +19,3 @@ visdom
 # CPU版 PyTorch
 torch
 torchvision
-
-# OpenCV
-opencv-python
