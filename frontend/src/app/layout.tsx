@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { jaJP } from "@clerk/localizations";
 import {
   ClerkProvider,
@@ -9,7 +10,11 @@ import {
 } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { Noto_Sans_JP, Noto_Serif_JP } from "next/font/google";
+import { FaCamera, FaHome } from "react-icons/fa";
+import { FaLocationPin } from "react-icons/fa6";
 import "./globals.css";
+
+import Link from "next/link";
 
 const notoSansJp = Noto_Sans_JP({
   variable: "--font-noto-sans-jp",
@@ -109,6 +114,19 @@ export default function RootLayout({
             </SignedIn>
           </header>
           {children}
+          <footer className="fixed bottom-0 flex h-20 w-full items-center justify-between overflow-visible border-t-2 border-amber-900 bg-amber-300 px-8">
+            <Button className="bg-transparent">
+              <Link href="/">
+                <FaHome size={48} color={"#000000"} />
+              </Link>
+            </Button>
+            <Button className="egg-up -translate-y-8 bg-white">
+              <FaCamera size={48} className="flex-none text-black" />
+            </Button>
+            <Button className="bg-transparent">
+              <FaLocationPin size={48} color={"#000000"} />
+            </Button>
+          </footer>
         </body>
       </html>
     </ClerkProvider>
