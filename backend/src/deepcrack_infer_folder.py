@@ -3,7 +3,6 @@ import torch
 import torchvision.transforms as transforms
 import numpy as np
 from PIL import Image
-import cv2
 from models.deepcrack_networks import define_deepcrack
 
 
@@ -14,7 +13,6 @@ def infer_crack_segment(
     img_input,
     model_path="src/models/pretrained_net_G.pth",
     return_type="pil",  # "pil" or "numpy"
-    save_path=None,
 ):
     """
     DeepCrackモデルでひび割れをセグメントする関数
@@ -77,11 +75,6 @@ def infer_crack_segment(
     pred = pred.squeeze().cpu().numpy()
     pred = np.clip((pred + 1) / 2, 0, 1)  # [-1,1]→[0,1]
     pred = (pred * 255).astype("uint8")  # 0–255
-
-    # --- 保存 --- #
-    if save_path:
-        os.makedirs(os.path.dirname(save_path), exist_ok=True)
-        cv2.imwrite(save_path, pred)
 
     # --- 戻り値形式を選択 --- #
     if return_type == "pil":
