@@ -129,7 +129,7 @@ def infer_crack_classifier(
             )
             img.save(save_path)
 
-    return results
+    return type_label, sev_pred
 
 
 # =====================================================
@@ -161,4 +161,3 @@ if __name__ == "__main__":
     res = infer_crack_classifier(
         args.img_path, args.model_path, args.show, args.save_dir
     )
-    print(json.dumps(res, indent=2, ensure_ascii=False))

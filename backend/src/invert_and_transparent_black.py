@@ -59,23 +59,3 @@ def invert_and_transparent_black(
         out_img.save(save_path, "PNG")
 
     return out_img
-
-
-invert_and_transparent_black(
-    "test_images/segmentation_results/11125-1.jpg", save_path="transparents/11125-1.png"
-)
-invert_and_transparent_black(
-    "test_images/segmentation_results/11125-2.jpg", save_path="transparents/11125-2.png"
-)
-invert_and_transparent_black(
-    "test_images/segmentation_results/11125-3.jpg", save_path="transparents/11125-3.png"
-)
-invert_and_transparent_black(
-    "test_images/segmentation_results/11222-1.jpg", save_path="transparents/11222-1.png"
-)
-invert_and_transparent_black(
-    "test_images/segmentation_results/11222-2.jpg", save_path="transparents/11222-2.png"
-)
-invert_and_transparent_black(
-    "test_images/segmentation_results/11222-3.jpg", save_path="transparents/11222-3.png"
-)

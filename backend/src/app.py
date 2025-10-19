@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from deepcrack_infer_folder import infer_crack_segment
 from infer_crack_classifier import infer_crack_classifier
-from db import register_segment_crack, update_egg_status
+from db import register_segment_crack, update_egg_status, delete_crack
 from invert_and_transparent_black import invert_and_transparent_black
 from PIL import Image
 import os
@@ -49,15 +49,16 @@ async def analyze_image(
 
     segment_img = infer_crack_segment(img_input=img)
 
-    classifier = infer_crack_classifier(img_input=segment_img)
+    type_label, severity_label = infer_crack_classifier(img_input=segment_img)
 
     inverted_extracted = invert_and_transparent_black(img_input=segment_img)
 
-    if classifier.type == "0":
+    if type_label == "0":
         return {
             "segment_url": None,
             "crack_segment": None,
-            "classifier": classifier,
+            type_label: None,
+            severity_label: None,
             "crack_counts": None,
             "status": "None",
         }
@@ -68,7 +69,8 @@ async def analyze_image(
             user_id=userID,
             segment=inverted_extracted,
             img_url=img_url,
-            classifier=classifier,
+            type=type_label,
+            severity_id=severity_label,
             Latitude=Latitude,
             Longitude=Longitude,
         )
@@ -81,18 +83,17 @@ async def analyze_image(
 
     result = {
         "segment_url": segment_url,
-        "classifier": classifier,
+        "type": type_label,
+        "severity": severity_label,
         "crack_counts": crack_counts,
     }
     return result
 
 
-# @app.post("/reset_egg")
-# async def reset_egg_status(
-#     userID: str,
-# ):
+@app.post("/reset_egg")
+async def reset_egg_status(
+    userID: str,
+):
+    delete_crack(supabase=supabase, user_id=userID)
 
-#     result = {
-#         "crack_counts": crack_counts,
-#     }
-#     return result
+    return {"message": "Reset successful"}
