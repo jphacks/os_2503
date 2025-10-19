@@ -2,16 +2,13 @@ import "@/app/globals.css";
 import { jaJP } from "@clerk/localizations";
 import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
-import { Noto_Sans_JP, Noto_Serif_JP } from "next/font/google";
+import { Zen_Maru_Gothic } from "next/font/google";
 
-const notoSansJp = Noto_Sans_JP({
-  variable: "--font-noto-sans-jp",
+// Google Fonts から Zen Maru Gothic を読み込み
+const zenMaruGothic = Zen_Maru_Gothic({
   subsets: ["latin"],
-});
-
-const notoSerifJp = Noto_Serif_JP({
-  variable: "--font-noto-serif-jp",
-  subsets: ["latin"],
+  weight: ["300", "400", "500", "700", "900"], // 利用したい太さ
+  variable: "--font-zen-maru-gothic",
 });
 
 export const metadata: Metadata = {
@@ -83,11 +80,12 @@ export default function RootLayout({
         },
       }}
     >
-      <html
-        lang="ja"
-        className={`${notoSansJp.variable} ${notoSerifJp.variable}`}
-      >
-        <body className="bg-[#fdffce] antialiased">{children}</body>
+      <html lang="ja">
+        <body
+          className={`${zenMaruGothic.className} "bg-[#fdffce] antialiased"`}
+        >
+          {children}
+        </body>
       </html>
     </ClerkProvider>
   );
