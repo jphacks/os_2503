@@ -74,6 +74,7 @@ export default function CameraPage() {
       // 仮のAPIを呼び出す
       const response = await postMockCrackReport(imageSrc, locationData);
       console.log("API success:", response);
+      router.push("/");
     } catch (err: unknown) {
       setError(
         err instanceof Error
