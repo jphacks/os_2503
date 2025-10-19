@@ -4,24 +4,30 @@ import numpy as np
 import os
 
 
+from typing import Union
+from PIL import Image
+import numpy as np
+import os
+
+
 def invert_and_transparent_black(
     img_input: Union[str, Image.Image, np.ndarray],
-    threshold: int = 128,
+    threshold: int = 80,
     save_path: str = None,
 ) -> Image.Image:
     """
-    白黒反転した画像を作成し、白部分を透過（黒部分のみ表示）する。
+    白い部分のみを黒色で抜き出し、それ以外を透過させる (RGBA出力)。
 
     Args:
         img_input: 画像パス (str) / PIL.Image / numpy.ndarray (H,W[,C])
-        threshold: 反転後の閾値 (0〜255)。暗い部分を残す。
+        threshold: 白判定の閾値 (0〜255)。高いほど厳しく白だけ抜き出す。
         save_path: 保存パス (例: 'out.png')。省略可。
 
     Returns:
-        透過PNG (RGBA) の PIL.Image
+        PIL.Image (RGBA)。白部分は黒、不透明。他は透明。
     """
 
-    # --- 入力をPIL.Imageに変換 ---
+    # --- 入力をPIL.Imageに統一 ---
     if isinstance(img_input, str):
         img = Image.open(img_input).convert("L")
     elif isinstance(img_input, Image.Image):
@@ -34,22 +40,20 @@ def invert_and_transparent_black(
     else:
         raise ValueError("img_input must be str, PIL.Image, or numpy.ndarray")
 
-    # --- NumPy配列に変換 ---
+    # --- NumPy配列化 ---
     gray = np.array(img).astype(np.uint8)
 
-    # --- 白黒反転 ---
-    inverted = 255 - gray
+    # --- 白領域のマスク作成 ---
+    mask = (gray >= threshold).astype(np.uint8) * 255  # 白い部分だけ255
 
-    # --- アルファチャンネルを生成（黒い部分だけ不透明） ---
-    alpha = np.where(inverted < threshold, 255, 0).astype(np.uint8)
+    # --- 出力画像を作成 ---
+    rgb = np.zeros((gray.shape[0], gray.shape[1], 3), dtype=np.uint8)  # 黒塗り
+    alpha = mask  # 白部分だけ不透明
 
-    # --- RGBに変換してアルファ合成 ---
-    rgb = np.stack([inverted] * 3, axis=-1)
     rgba = np.dstack([rgb, alpha]).astype(np.uint8)
-
-    # --- PIL Imageとして返す ---
     out_img = Image.fromarray(rgba, mode="RGBA")
 
+    # --- 保存オプション ---
     if save_path:
         os.makedirs(os.path.dirname(save_path) or ".", exist_ok=True)
         out_img.save(save_path, "PNG")

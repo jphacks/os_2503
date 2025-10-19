@@ -1,16 +1,15 @@
 from supabase import Client
-
-
-from supabase import Client
 from io import BytesIO
+from PIL import Image
 
 
 def register_segment_crack(
     supabase: Client,
     user_id: str,
-    segment: bytes,
+    segment,
     img_url: str,
-    classifier,
+    type: str,
+    severity_id: int,
     Latitude: float,
     Longitude: float,
 ):
@@ -21,57 +20,85 @@ def register_segment_crack(
     Args:
         supabase (Client): Supabaseクライアント
         user_id (str): ユーザーID
-        segment (bytes): セグメント画像データ（バイナリ）
+        segment (bytes or PIL.Image.Image): セグメント画像データ
         img_url (str): 元画像URL
-
+        type (str): ひび分類タイプ
+        severity_level (str): 重症度レベル
+        Latitude (float): 緯度
+        Longitude (float): 経度
     Returns:
-        str: 公開URL
+        (segment_url: str, crack_id: int)
     """
 
-    # === 1️⃣ 既存crack数を確認 ===
-    count_response = (
-        supabase.table("user_cracks")
-        .select("crack_id", count="exact")
-        .eq("user_id", user_id)
-        .execute()
-    )
-    crack_count = (
-        count_response.count
-        if hasattr(count_response, "count")
-        else len(count_response.data or [])
-    )
-    crack_index = crack_count + 1  # 新しい番号
-    print(f"[i] Existing cracks for {user_id}: {crack_count}")
-
-    # === 2️⃣ ファイル名を一意化してアップロード ===
-    file_path = f"{user_id}/segment_{crack_index}.png"
-    upload_response = supabase.storage.from_("crack_collector").upload(
-        file_path, segment, {"upsert": True}
+    # === 1️⃣ user_eggsからegg_idを取得 ===
+    user_eggs_response = (
+        supabase.table("user_eggs").select("egg_id").eq("user_id", user_id).execute()
     )
 
-    if upload_response.status_code not in [200, 201]:
-        raise Exception(
-            f"❌ Failed to upload segment image: {upload_response.error_message}"
+    if not user_eggs_response.data:
+        raise Exception(f"No egg found for user_id: {user_id}")
+
+    egg_ids = [e["egg_id"] for e in user_eggs_response.data]
+
+    if egg_ids:
+        cracks_count_response = (
+            supabase.table("egg_cracks")
+            .select("crack_id", count="exact")
+            .in_("egg_id", egg_ids)  # 複数のegg_idに対して数を取得
+            .execute()
         )
 
-    # === 3️⃣ 公開URLを取得 ===
-    public_url_response = supabase.storage.from_("crack_collector").get_public_url(
-        file_path
+        cracks_count = (
+            cracks_count_response.count
+            if hasattr(cracks_count_response, "count")
+            else len(cracks_count_response.data or [])
+        )
+    else:
+        cracks_count = 0
+
+    crack_index = cracks_count + 1
+    print(
+        f"[i] User {user_id} has {cracks_count} existing cracks in their eggs. New index: {crack_index}"
     )
-    segment_url = public_url_response.get("publicUrl")
 
-    if not segment_url:
-        raise Exception("❌ Failed to get public URL for uploaded image")
+    # === 2️⃣ 画像をバイナリ化 ===
+    if isinstance(segment, Image.Image):
+        # PIL Image → PNGバイナリに変換
+        buffer = BytesIO()
+        segment.save(buffer, format="PNG")
+        buffer.seek(0)
+        binary_data = buffer.getvalue()
+        print(f"[i] Converted PIL image to bytes ({len(binary_data)} bytes)")
+    elif isinstance(segment, bytes):
+        binary_data = segment
+    else:
+        raise TypeError("segment must be bytes or PIL.Image.Image")
 
-    # === 4️⃣ cracksテーブルに登録 ===
+    # === 3️⃣ ストレージにアップロード ===
+    file_path = f"{user_id}/segment_{crack_index}.png"
+
+    try:
+        upload_response = supabase.storage.from_("crack_collector").upload(
+            file_path, binary_data, {"upsert": "true"}
+        )
+    except Exception as e:
+        raise Exception(f"Failed to upload segment image: {str(e)}")
+
+    # === 4️⃣ 公開URLを取得 ===
+    segment_url = supabase.storage.from_("crack_collector").get_public_url(file_path)
+
+    if not isinstance(segment_url, str) or not segment_url.startswith("http"):
+        raise Exception("Failed to get valid public URL for uploaded image")
+
+    # === 5️⃣ cracksテーブルに登録 ===
     cracks_response = (
         supabase.table("cracks")
         .insert(
             {
                 "img_url": img_url,
-                "segment_url": segment_url,
-                "type_id": classifier.type_id,
-                "severity_id": classifier.severity_id,
+                "seg_url": segment_url,
+                "type": type,
+                "severity": severity_id,
                 "latitude": Latitude,
                 "longitude": Longitude,
             }
@@ -79,25 +106,21 @@ def register_segment_crack(
         .execute()
     )
 
-    if cracks_response.error:
-        raise Exception(f"❌ Failed to insert crack record: {cracks_response.error}")
+    if not cracks_response.data:
+        raise Exception("Failed to insert crack record into cracks table")
 
     crack_id = cracks_response.data[0]["id"]
-    print(f"[+] New crack inserted with id={crack_id}")
 
-    # === 5️⃣ user_cracksテーブルに紐付け登録 ===
+    # === 6️⃣ user_cracksテーブルに紐付け登録 ===
     user_cracks_response = (
         supabase.table("user_cracks")
-        .insert({"user_id": user_id, "crackId": crack_id})
+        .insert({"user_id": user_id, "crack_id": crack_id})
         .execute()
     )
 
-    if user_cracks_response.error:
-        raise Exception(
-            f"❌ Failed to insert user_crack record: {user_cracks_response.error}"
-        )
+    if not user_cracks_response.data:
+        raise Exception("Failed to insert user_crack record")
 
-    print(f"✅ Registered user_crack link for {user_id} → {crack_id}")
     return segment_url, crack_id
 
 
@@ -110,7 +133,7 @@ def update_egg_status(
     ユーザIDに基づき、egg_cracksテーブルにcrack_idを追加し、
     現在のeggに紐づくcrack_idの総数を返す。
     """
-    # user_eggsからユーザのegg_idを取得
+    # === 1️⃣ user_eggsからegg_idを取得 ===
     user_eggs_response = (
         supabase.table("user_eggs").select("egg_id").eq("user_id", user_id).execute()
     )
@@ -120,20 +143,41 @@ def update_egg_status(
 
     egg_id = user_eggs_response.data[0]["egg_id"]
 
-    # egg_cracksにcrack_idを登録
-    insert_response = (
-        supabase.table("egg_cracks")
-        .insert({"egg_id": egg_id, "crack_id": crack_id})
-        .execute()
-    )
+    # === 2️⃣ egg_cracksにcrack_idを登録 ===
+    try:
+        supabase.table("egg_cracks").insert(
+            {"egg_id": egg_id, "crack_id": crack_id}
+        ).execute()
+    except Exception as e:
+        raise Exception(f"Failed to insert crack_id into egg_cracks: {str(e)}")
 
-    if insert_response.status_code not in (200, 201):
-        raise Exception(f"Failed to insert crack_id: {insert_response.error_message}")
-
-    # 登録済みのcrack_id総数をカウント
+    # === 3️⃣ 登録済みcrack_idの総数をカウント ===
     crack_response = (
         supabase.table("egg_cracks").select("crack_id").eq("egg_id", egg_id).execute()
     )
-    crack_count = len(crack_response.data)
+    crack_count = len(crack_response.data or [])
 
+    print(f"[i] Total cracks for egg_id={egg_id}: {crack_count}")
     return crack_count
+
+
+def delete_crack(user_id: str, supabase: Client):
+    """
+    特定のuser_idに紐づくeggs, egg_cracks, user_cracks, user_eggsを削除する。
+    """
+    # --- user_eggsからegg_idを取得 ---
+    user_eggs_resp = (
+        supabase.table("user_eggs").select("egg_id").eq("user_id", user_id).execute()
+    )
+    egg_ids = (
+        [row["egg_id"] for row in user_eggs_resp.data] if user_eggs_resp.data else []
+    )
+
+    print(f"Found {len(egg_ids)} eggs linked to user {user_id}")
+
+    # --- egg_cracks削除 ---
+    if egg_ids:
+        supabase.table("egg_cracks").delete().in_("egg_id", egg_ids).execute()
+        print(f"Deleted egg_cracks linked to eggs {egg_ids}")
+
+    print(f"All related data for user {user_id} has been deleted.")
