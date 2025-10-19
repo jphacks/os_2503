@@ -34,7 +34,6 @@ export default async function Home() {
         crackUrls={homePageData.egg.cracks.map((c) => c.transparent_url)}
         className="h-80 w-80 overflow-clip rounded-2xl lg:h-96 lg:w-96"
       />
-
       <Progress
         value={(crack / crack_need) * 100}
         className="h-4 w-[90%] bg-gray-200 lg:w-[45%] [&>div]:bg-amber-400"
