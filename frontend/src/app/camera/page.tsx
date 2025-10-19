@@ -12,7 +12,7 @@ import {
 import { postMockCrackReport } from "@/lib/api"; // 仮のAPI
 import Image from "next/image";
 import { useCallback, useRef, useState } from "react";
-import { FaCamera, FaEgg } from "react-icons/fa";
+import { IoIosRadioButtonOn } from "react-icons/io";
 import Webcam from "react-webcam";
 
 export default function CameraPage() {
@@ -106,13 +106,9 @@ export default function CameraPage() {
         className="absolute bottom-16 left-1/2 -translate-x-1/2"
         disabled={isSending || imageSrc !== null}
       >
-        <FaEgg
+        <IoIosRadioButtonOn
           color="#FFFFFF"
           className="absolute top-1/2 left-1/2 size-24 -translate-x-1/2 -translate-y-1/2"
-        />
-        <FaCamera
-          color="#000000"
-          className="absolute top-1/2 left-1/2 size-12 -translate-x-1/2 -translate-y-1/2"
         />
       </Button>
 

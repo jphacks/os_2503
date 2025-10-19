@@ -83,16 +83,16 @@ export default function RootLayout({
       <footer className="fixed bottom-0 flex h-20 w-full items-center justify-between overflow-visible bg-amber-400 px-8 shadow-inner shadow-black">
         <Button className="bg-transparent">
           <Link href="/">
-            <FaHome size={48} color={"#000000"} className="size-48" />
+            <FaHome size={48} color={"#000000"} className="size-12" />
           </Link>
         </Button>
         <Button className="egg-up -translate-y-8 bg-white">
           <Link href="/camera">
-            <FaCamera size={48} className="size-48 flex-none text-black" />
+            <FaCamera size={48} className="size-12 flex-none text-black" />
           </Link>
         </Button>
         <Button className="bg-transparent">
-          <FaLocationPin size={48} color={"#000000"} className="size-48" />
+          <FaLocationPin size={48} color={"#000000"} className="size-12" />
         </Button>
       </footer>
     </>
