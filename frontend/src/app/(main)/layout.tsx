@@ -65,7 +65,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <>
+    <div className="min-h-svh">
       <header className="flex h-16 items-center justify-end gap-4 p-4">
         <SignedOut>
           <SignInButton />
@@ -95,6 +95,6 @@ export default function RootLayout({
           <FaLocationPin size={48} color={"#000000"} className="size-12" />
         </Button>
       </footer>
-    </>
+    </div>
   );
 }
