@@ -70,7 +70,7 @@ export default function RootLayout({
         <SignedOut>
           <SignInButton />
           <SignUpButton>
-            <button className="text-ceramic-white h-10 cursor-pointer rounded-full bg-amber-400 px-4 text-sm font-medium sm:h-12 sm:px-5 sm:text-base">
+            <button className="text-ceramic-white h-10 cursor-pointer rounded-full bg-[#ffc36e] px-4 text-sm font-medium sm:h-12 sm:px-5 sm:text-base">
               Sign Up
             </button>
           </SignUpButton>
@@ -80,18 +80,18 @@ export default function RootLayout({
         </SignedIn>
       </header>
       {children}
-      <footer className="fixed bottom-0 flex h-20 w-full items-center justify-between overflow-visible bg-amber-400 px-8 shadow-inner shadow-black">
-        <Button className="bg-transparent">
+      <footer className="fixed bottom-0 flex h-20 w-full items-center justify-between overflow-visible bg-[#ffc36e] px-8 shadow-inner shadow-black">
+        <Button className="bg-transparent hover:bg-transparent">
           <Link href="/">
             <FaHome size={48} color={"#000000"} className="size-12" />
           </Link>
         </Button>
-        <Button className="egg-up -translate-y-8 bg-white">
+        <Button className="egg-up hover:bg-yellow -translate-y-8 bg-white">
           <Link href="/camera">
             <FaCamera size={48} className="size-12 flex-none text-black" />
           </Link>
         </Button>
-        <Button className="bg-transparent">
+        <Button className="bg-transparent hover:bg-transparent">
           <FaLocationPin size={48} color={"#000000"} className="size-12" />
         </Button>
       </footer>

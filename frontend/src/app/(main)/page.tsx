@@ -15,7 +15,7 @@ export default async function Home() {
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-y-4 px-8 pb-30 font-sans">
-      <div className="flex h-25 w-fit justify-center gap-x-2 rounded-2xl p-2 shadow-2xl">
+      <div className="flex h-25 w-fit justify-center gap-x-2 rounded-2xl bg-white p-2 shadow-2xl">
         <div className="relative h-20 w-20 flex-shrink-0">
           <Image
             src="/aquatan_test.png"
@@ -36,9 +36,9 @@ export default async function Home() {
       />
       <Progress
         value={(crack / crack_need) * 100}
-        className="h-4 w-[90%] bg-gray-200 lg:w-[45%] [&>div]:bg-amber-400"
+        className="h-4 w-[90%] bg-gray-200 lg:w-[45%] [&>div]:bg-[#ffc36e]"
       />
-      <div className="flex h-30 w-[90%] items-center justify-between rounded-2xl bg-amber-400 px-4 py-2 lg:w-[45%]">
+      <div className="flex h-30 w-[90%] items-center justify-between rounded-2xl bg-[#ffc36e] px-4 py-2 lg:w-[45%]">
         <div className="h-full">
           <p className="font-black">Recent Aquatans</p>
           <div className="flex">
