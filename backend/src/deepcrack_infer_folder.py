@@ -3,7 +3,7 @@ import torch
 import torchvision.transforms as transforms
 import numpy as np
 from PIL import Image
-from models.deepcrack_networks import define_deepcrack
+from src.models.deepcrack_networks import define_deepcrack
 
 
 # =====================================================

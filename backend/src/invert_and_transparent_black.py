@@ -12,7 +12,7 @@ import os
 
 def invert_and_transparent_black(
     img_input: Union[str, Image.Image, np.ndarray],
-    threshold: int = 80,
+    threshold: int = 1,
     save_path: str = None,
 ) -> Image.Image:
     """
