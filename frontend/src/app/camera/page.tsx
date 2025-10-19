@@ -11,8 +11,10 @@ import {
 } from "@/components/ui/dialog";
 import { postMockCrackReport } from "@/lib/api"; // 仮のAPI
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useCallback, useRef, useState } from "react";
 import { IoIosRadioButtonOn } from "react-icons/io";
+import { TbArrowBackUp } from "react-icons/tb";
 import Webcam from "react-webcam";
 
 export default function CameraPage() {
@@ -23,6 +25,8 @@ export default function CameraPage() {
   );
   const [isSending, setIsSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const router = useRouter();
 
   /**
    * 撮影ボタンが押された時の処理
@@ -100,6 +104,21 @@ export default function CameraPage() {
         }}
         className="h-full w-full object-contain"
       />
+      <Button
+        onClick={() => {
+          if (window.history.length > 1) {
+            router.back();
+          } else {
+            router.push("/");
+          }
+        }}
+        className="absolute bottom-16 left-1/6"
+      >
+        <TbArrowBackUp
+          color="#FFFFFF"
+          className="absolute top-1/2 left-1/2 size-24 -translate-x-1/2 -translate-y-1/2"
+        />
+      </Button>
       <Button
         onClick={handleCapture}
         variant="ghost"

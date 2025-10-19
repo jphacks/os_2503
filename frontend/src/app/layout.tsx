@@ -87,7 +87,7 @@ export default function RootLayout({
         lang="ja"
         className={`${notoSansJp.variable} ${notoSerifJp.variable}`}
       >
-        <body className="antialiased">{children}</body>
+        <body className="bg-[#fdffce] antialiased">{children}</body>
       </html>
     </ClerkProvider>
   );
