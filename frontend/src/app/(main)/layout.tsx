@@ -1,4 +1,5 @@
 import "@/app/globals.css";
+import ShootingButton from "@/components/shooting-button";
 import { Button } from "@/components/ui/button";
 import {
   SignedIn,
@@ -8,21 +9,10 @@ import {
   UserButton,
 } from "@clerk/nextjs";
 import type { Metadata } from "next";
-import { Noto_Sans_JP, Noto_Serif_JP } from "next/font/google";
-import { FaCamera, FaHome } from "react-icons/fa";
+import { FaHome } from "react-icons/fa";
 import { FaLocationPin } from "react-icons/fa6";
 
 import Link from "next/link";
-
-const notoSansJp = Noto_Sans_JP({
-  variable: "--font-noto-sans-jp",
-  subsets: ["latin"],
-});
-
-const notoSerifJp = Noto_Serif_JP({
-  variable: "--font-noto-serif-jp",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   // metadataBase: new URL("https://example.com"),

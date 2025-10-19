@@ -43,6 +43,11 @@ def infer_crack_classifier(
 
     戻り値: list of dict [{ "file": str, "type": str, "severity": str }]
     """
+    if isinstance(img_input, Image.Image):
+        if img_input.mode != "RGB":
+            img_input = img_input.convert("RGB")  # ★ 自動変換
+        img_list = [img_input]
+        names = ["input_image"]
 
     crack_types = ["Other", "Linear", "Alligator", "Pothole"]
     severities = ["0", "1", "2", "3"]
@@ -103,7 +108,7 @@ def infer_crack_classifier(
         type_label = crack_types[type_pred]
         severity_label = severities[sev_pred]
 
-        results.append({"file": name, "type": type_label, "severity": severity_label})
+        results.append({"file": name, "type": type_label, "classifier": severity_label})
 
         # オプション: 結果を可視化
         if show:
@@ -124,7 +129,7 @@ def infer_crack_classifier(
             )
             img.save(save_path)
 
-    return results
+    return type_label, sev_pred
 
 
 # =====================================================
@@ -156,4 +161,3 @@ if __name__ == "__main__":
     res = infer_crack_classifier(
         args.img_path, args.model_path, args.show, args.save_dir
     )
-    print(json.dumps(res, indent=2, ensure_ascii=False))

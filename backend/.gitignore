@@ -40,4 +40,5 @@ env.bak/
 venv.bak/
 src/models/
 test_images/
+test.py
 .vercel
