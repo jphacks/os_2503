@@ -1,5 +1,4 @@
 import "@/app/globals.css";
-import ShootingButton from "@/components/shooting-button";
 import { Button } from "@/components/ui/button";
 import {
   SignedIn,
@@ -9,7 +8,7 @@ import {
   UserButton,
 } from "@clerk/nextjs";
 import type { Metadata } from "next";
-import { FaHome } from "react-icons/fa";
+import { FaCamera, FaHome } from "react-icons/fa";
 import { FaLocationPin } from "react-icons/fa6";
 
 import Link from "next/link";
@@ -84,16 +83,16 @@ export default function RootLayout({
       <footer className="fixed bottom-0 flex h-20 w-full items-center justify-between overflow-visible bg-amber-400 px-8 shadow-inner shadow-black">
         <Button className="bg-transparent">
           <Link href="/">
-            <FaHome size={48} color={"#000000"} />
+            <FaHome size={48} color={"#000000"} className="size-48" />
           </Link>
         </Button>
         <Button className="egg-up -translate-y-8 bg-white">
           <Link href="/camera">
-            <FaCamera size={48} className="flex-none text-black" />
+            <FaCamera size={48} className="size-48 flex-none text-black" />
           </Link>
         </Button>
         <Button className="bg-transparent">
-          <FaLocationPin size={48} color={"#000000"} />
+          <FaLocationPin size={48} color={"#000000"} className="size-48" />
         </Button>
       </footer>
     </>
