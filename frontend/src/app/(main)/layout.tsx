@@ -9,7 +9,7 @@ import {
 } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { FaCamera, FaHome } from "react-icons/fa";
-import { IoMdPin } from "react-icons/io";
+import { FaMapLocation } from "react-icons/fa6";
 
 import Link from "next/link";
 
@@ -80,7 +80,7 @@ export default function RootLayout({
         </SignedIn>
       </header>
       {children}
-      <footer className="fixed bottom-0 flex h-20 w-full items-center justify-between overflow-visible bg-[#ffc36e] px-8 shadow-inner shadow-black">
+      <footer className="fixed bottom-0 z-50 flex h-20 w-full items-center justify-between overflow-visible bg-[#ffc36e] px-8 shadow-inner shadow-black">
         <Button className="bg-transparent hover:bg-transparent">
           <Link href="/">
             <FaHome size={48} color={"#000000"} className="size-12" />
@@ -92,7 +92,9 @@ export default function RootLayout({
           </Link>
         </Button>
         <Button className="bg-transparent hover:bg-transparent">
-          <IoMdPin size={48} color={"#000000"} className="size-12" />
+          <Link href="/map">
+            <FaMapLocation size={48} color={"#000000"} className="size-12" />
+          </Link>
         </Button>
       </footer>
     </div>
