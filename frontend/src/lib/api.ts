@@ -22,3 +22,14 @@ export async function fetchMockHomePageData() {
     },
   };
 }
+
+export async function postMockCrackReport(
+  imageBase64: string,
+  locationData: GeolocationPosition,
+) {
+  await new Promise((resolve) => setTimeout(resolve, 1500));
+  return {
+    status: "success",
+    message: "Crack report submitted successfully",
+  };
+}
