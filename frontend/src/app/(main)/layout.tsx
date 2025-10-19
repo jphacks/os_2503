@@ -1,6 +1,6 @@
-import { jaJP } from "@clerk/localizations";
+import "@/app/globals.css";
+import { Button } from "@/components/ui/button";
 import {
-  ClerkProvider,
   SignedIn,
   SignedOut,
   SignInButton,
@@ -9,7 +9,10 @@ import {
 } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { Noto_Sans_JP, Noto_Serif_JP } from "next/font/google";
-import "./globals.css";
+import { FaCamera, FaHome } from "react-icons/fa";
+import { FaLocationPin } from "react-icons/fa6";
+
+import Link from "next/link";
 
 const notoSansJp = Noto_Sans_JP({
   variable: "--font-noto-sans-jp",
@@ -73,44 +76,34 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider
-      //  localization={jaJP}
-      localization={{
-        ...jaJP,
-        userProfile: {
-          ...jaJP.userProfile,
-          deletePage: {
-            title: "アカウントの削除",
-            messageLine1: "アカウントを削除してもよろしいですか？",
-            messageLine2: "この操作は永久的で取り消すことはできません。",
-            actionDescription:
-              "続行するには「アカウント削除」と入力してください。",
-            confirm: "削除",
-          },
-        },
-      }}
-    >
-      <html
-        lang="ja"
-        className={`${notoSansJp.variable} ${notoSerifJp.variable}`}
-      >
-        <body className="antialiased">
-          <header className="flex h-16 items-center justify-end gap-4 p-4">
-            <SignedOut>
-              <SignInButton />
-              <SignUpButton>
-                <button className="text-ceramic-white h-10 cursor-pointer rounded-full bg-[#6c47ff] px-4 text-sm font-medium sm:h-12 sm:px-5 sm:text-base">
-                  Sign Up
-                </button>
-              </SignUpButton>
-            </SignedOut>
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
-          </header>
-          {children}
-        </body>
-      </html>
-    </ClerkProvider>
+    <>
+      <header className="flex h-16 items-center justify-end gap-4 p-4">
+        <SignedOut>
+          <SignInButton />
+          <SignUpButton>
+            <button className="text-ceramic-white h-10 cursor-pointer rounded-full bg-amber-400 px-4 text-sm font-medium sm:h-12 sm:px-5 sm:text-base">
+              Sign Up
+            </button>
+          </SignUpButton>
+        </SignedOut>
+        <SignedIn>
+          <UserButton />
+        </SignedIn>
+      </header>
+      {children}
+      <footer className="fixed bottom-0 flex h-20 w-full items-center justify-between overflow-visible bg-amber-400 px-8 shadow-inner shadow-black">
+        <Button className="bg-transparent">
+          <Link href="/">
+            <FaHome size={48} color={"#000000"} />
+          </Link>
+        </Button>
+        <Button className="egg-up -translate-y-8 bg-white">
+          <FaCamera size={48} className="flex-none text-black" />
+        </Button>
+        <Button className="bg-transparent">
+          <FaLocationPin size={48} color={"#000000"} />
+        </Button>
+      </footer>
+    </>
   );
 }
