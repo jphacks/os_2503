@@ -18,10 +18,7 @@ export default function MyProfile() {
       </SignedIn>
       <div className="my-auto text-center font-bold">
         <p className="font-semibold text-gray-800">
-          {user?.fullName ||
-            user?.username ||
-            user?.primaryEmailAddress?.emailAddress ||
-            "?"}
+          {user?.username || user?.primaryEmailAddress?.emailAddress || "?"}
         </p>
         <p>Crack Master</p>
       </div>
