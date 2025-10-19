@@ -131,7 +131,7 @@ def update_egg_status(
 ):
     """
     ユーザIDに基づき、egg_cracksテーブルにcrack_idを追加し、
-    現在のeggに紐づくcrack_idの総数を返す。
+    現在のeggに紐づくcrack_idのseg_urlのリストを返す。
     """
     # === 1️⃣ user_eggsからegg_idを取得 ===
     user_eggs_response = (
@@ -151,14 +151,22 @@ def update_egg_status(
     except Exception as e:
         raise Exception(f"Failed to insert crack_id into egg_cracks: {str(e)}")
 
-    # === 3️⃣ 登録済みcrack_idの総数をカウント ===
-    crack_response = (
+    # === 3️⃣ 現在のeggに紐づくcrack_idを取得 ===
+    egg_cracks_response = (
         supabase.table("egg_cracks").select("crack_id").eq("egg_id", egg_id).execute()
     )
-    crack_count = len(crack_response.data or [])
+    crack_ids = [item["crack_id"] for item in (egg_cracks_response.data or [])]
 
-    print(f"[i] Total cracks for egg_id={egg_id}: {crack_count}")
-    return crack_count
+    # === 4️⃣ cracksテーブルからseg_urlを取得 ===
+    seg_urls = []
+    if crack_ids:
+        cracks_response = (
+            supabase.table("cracks").select("seg_url").in_("id", crack_ids).execute()
+        )
+        seg_urls = [item["seg_url"] for item in (cracks_response.data or [])]
+
+    print(f"[i] Total cracks for egg_id={egg_id}: {len(seg_urls)}")
+    return seg_urls
 
 
 def delete_crack(user_id: str, supabase: Client):

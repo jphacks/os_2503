@@ -85,17 +85,17 @@ async def analyze_image(req: AnalyzeRequest):
             Longitude=req.Longitude,
         )
 
-        crack_counts = update_egg_status(
+        segment_urls = update_egg_status(
             supabase=supabase,
             user_id=req.userID,
             crack_id=crack_id,
         )
+        print(segment_urls)
 
     result = {
-        "segment_url": segment_url,
+        "segment_urls": segment_urls,
         "type": type_label,
         "severity": severity_label,
-        "crack_counts": crack_counts,
     }
     return result
 
