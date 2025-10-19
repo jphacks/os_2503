@@ -12,6 +12,8 @@ import { Bloom, EffectComposer } from "@react-three/postprocessing";
 import { Suspense, useCallback, useRef, useState } from "react";
 import * as THREE from "three";
 
+import { Progress } from "@/components/ui/progress";
+
 const EGG_MODEL_PATH = "/models/egg.glb";
 const AQUATAN_MODEL_PATH = "/models/aquatan.glb";
 const MAX_CRACKS = 6;
@@ -45,22 +47,44 @@ export default function EggViewer({
 }: EggViewerProps) {
   const [isHatched, setIsHatched] = useState(false);
   return (
-    <div className={cn("relative h-full w-full", className)}>
-      <Canvas camera={{ position: [0, 0, 3] }}>
-        <Scene
-          crackUrls={crackUrls}
-          onEggBreak={() => {
-            setIsHatched(true);
-            onEggBreak?.();
-          }}
+    <div>
+      <div className={cn("relative h-full w-full", className)}>
+        <Canvas camera={{ position: [0, 0, 3] }}>
+          <Scene
+            crackUrls={crackUrls}
+            onEggBreak={() => {
+              setIsHatched(true);
+              onEggBreak?.();
+            }}
+          />
+        </Canvas>
+        {/* メッセージの表示 */}
+        {crackUrls.length >= MAX_CRACKS && !isHatched && (
+          <div className="absolute bottom-8 w-full text-center text-xl font-bold text-amber-600">
+            タップして孵化させよう！
+          </div>
+        )}
+      </div>
+      <div className="relative mt-4 w-full">
+        <Progress
+          value={(crackUrls.length / MAX_CRACKS) * 100}
+          className={`${
+            crackUrls.length >= MAX_CRACKS
+              ? isHatched
+                ? "[&>div]:bg-amber-600"
+                : "animate-[caret-blink_1.3s_steps(2,start)_infinite] [&>div]:bg-red-500"
+              : "[&>div]:bg-[#ffc36e]"
+          } h-4 bg-gray-200`}
         />
-      </Canvas>
-      {/* メッセージの表示 */}
-      {crackUrls.length >= MAX_CRACKS && !isHatched && (
-        <div className="absolute bottom-8 w-full text-center text-xl font-bold text-amber-600">
-          タップして孵化させよう！
-        </div>
-      )}
+        <span
+          className="absolute inset-0 top-[-4px] flex items-center text-xl font-bold text-black"
+          style={{
+            left: `calc(${(crackUrls.length / MAX_CRACKS) * 100}% - 2.5rem)`, // 少し左にずらす
+          }}
+        >
+          {Math.round((crackUrls.length / MAX_CRACKS) * 100)}%
+        </span>
+      </div>
     </div>
   );
 }
