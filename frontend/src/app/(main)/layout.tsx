@@ -87,7 +87,11 @@ export default function RootLayout({
             <FaHome size={48} color={"#000000"} />
           </Link>
         </Button>
-        <ShootingButton />
+        <Button className="egg-up -translate-y-8 bg-white">
+          <Link href="/camera">
+            <FaCamera size={48} className="flex-none text-black" />
+          </Link>
+        </Button>
         <Button className="bg-transparent">
           <FaLocationPin size={48} color={"#000000"} />
         </Button>
