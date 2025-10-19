@@ -77,12 +77,12 @@ export default function EggViewer({
           } h-4 bg-gray-200`}
         />
         <span
-          className="absolute inset-0 top-[-4px] flex items-center text-xl font-bold text-black"
+          className="absolute inset-0 top-[-4px] flex w-fit items-center text-xl font-bold text-black"
           style={{
             left: `calc(${(crackUrls.length / MAX_CRACKS) * 100}% - 2.5rem)`, // 少し左にずらす
           }}
         >
-          {Math.round((crackUrls.length / MAX_CRACKS) * 100)}%
+          {crackUrls.length}/{MAX_CRACKS}
         </span>
       </div>
     </div>
