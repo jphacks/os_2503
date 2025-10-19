@@ -9,7 +9,7 @@ import {
 } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { FaCamera, FaHome } from "react-icons/fa";
-import { FaLocationPin } from "react-icons/fa6";
+import { IoMdPin } from "react-icons/io";
 
 import Link from "next/link";
 
@@ -92,7 +92,7 @@ export default function RootLayout({
           </Link>
         </Button>
         <Button className="bg-transparent hover:bg-transparent">
-          <FaLocationPin size={48} color={"#000000"} className="size-12" />
+          <IoMdPin size={48} color={"#000000"} className="size-12" />
         </Button>
       </footer>
     </div>

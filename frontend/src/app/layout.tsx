@@ -81,9 +81,7 @@ export default function RootLayout({
       }}
     >
       <html lang="ja">
-        <body
-          className={`${zenMaruGothic.className} "bg-[#fdffce] antialiased"`}
-        >
+        <body className={`${zenMaruGothic.className} bg-[#fdffce] antialiased`}>
           {children}
         </body>
       </html>
